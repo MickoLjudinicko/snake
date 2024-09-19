@@ -1,8 +1,10 @@
 use crate::constants::{BOARD_HEIGHT, BOARD_WIDTH};
 use crate::coordinate::Coordinate;
+use crate::direction::Direction;
 use crate::food::Food;
 use crate::input::InputHandler;
 use crate::snake::Snake;
+use crate::sound;
 use crossterm::style::{Color, ResetColor, SetBackgroundColor, SetForegroundColor};
 use crossterm::{
     cursor::{Hide, MoveTo, Show},
@@ -42,7 +44,9 @@ impl Game {
         execute!(stdout, Hide).unwrap();
 
         loop {
-            if self.input_handler.poll_input() {
+            if self.is_autopilot_on {
+                self.autopilot();
+            } else if self.input_handler.poll_input() {
                 let direction = self.input_handler.get_direction();
                 self.snake.change_direction(direction);
             }
@@ -53,9 +57,12 @@ impl Game {
                 self.snake.grow();
                 self.food = Food::new(&self.snake);
                 self.score += 1;
+
+                sound::play_tone(440, 200);
             }
 
             if self.snake.collides_with_self() || self.snake.collides_with_wall() {
+                sound::play_tone(220, 500);
                 break;
             }
 
@@ -66,10 +73,67 @@ impl Game {
         self.print_game_over_screen(stdout);
     }
 
-    /// Clears entire screen, moves cursor to the top left corner and prints out game score.
+    fn autopilot(&mut self) {
+        let snake_head = self.snake.head_position();
+        let food_position = self.food.position;
+
+        // Calculate the direction to food, considering obstacles
+        let direction_to_food = self.calculate_direction_to_food(snake_head, food_position);
+
+        // Change the snake's direction
+        self.snake.change_direction(direction_to_food);
+    }
+
+    fn calculate_direction_to_food(&self, head: Coordinate, food: Coordinate) -> Direction {
+        // Helper function to check if the next position in a given direction is safe
+        let is_safe = |direction: Direction| -> bool {
+            let next_position = match direction {
+                Direction::Up => Coordinate(head.0, head.1 - 1),
+                Direction::Down => Coordinate(head.0, head.1 + 1),
+                Direction::Left => Coordinate(head.0 - 1, head.1),
+                Direction::Right => Coordinate(head.0 + 1, head.1),
+            };
+            !self.snake.body.contains(&next_position)
+                && next_position.0 > 0
+                && next_position.0 < BOARD_WIDTH - 1
+                && next_position.1 > 0
+                && next_position.1 < BOARD_HEIGHT - 1
+        };
+
+        // Check all directions and choose the best one
+        let directions = [
+            Direction::Up,
+            Direction::Down,
+            Direction::Left,
+            Direction::Right,
+        ];
+        let mut best_direction = self.snake.direction;
+        let mut min_distance = i32::MAX;
+
+        for &dir in &directions {
+            if dir != self.snake.direction.opposite() && is_safe(dir) {
+                let next_pos = match dir {
+                    Direction::Up => Coordinate(head.0, head.1 - 1),
+                    Direction::Down => Coordinate(head.0, head.1 + 1),
+                    Direction::Left => Coordinate(head.0 - 1, head.1),
+                    Direction::Right => Coordinate(head.0 + 1, head.1),
+                };
+                let distance = (next_pos.0 - food.0).abs() + (next_pos.1 - food.1).abs();
+                if distance < min_distance {
+                    min_distance = distance;
+                    best_direction = dir;
+                }
+            }
+        }
+
+        best_direction
+    }
+
+    /// Clears entire screen, moves cursor to the top left corner, and prints out the game score.
     fn print_game_over_screen(&mut self, mut stdout: std::io::Stdout) {
         execute!(stdout, Show).unwrap();
         clear_screen(&stdout);
+
         move_cursor_to_top_left_corner(stdout);
         disable_raw_mode().unwrap();
         println!("Game Over! Your score: {}", self.score);

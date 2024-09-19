@@ -6,6 +6,7 @@ mod food;
 mod game;
 mod input;
 mod snake;
+mod sound;
 
 use std::io::{self, Write};
 
@@ -27,7 +28,7 @@ fn main() {
         1 => (150, false),
         2 => (100, false),
         3 => (50, false),
-        4 => (100, true),
+        4 => (25, true),
         _ => (100, false),
     };
 

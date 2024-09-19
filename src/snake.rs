@@ -61,8 +61,8 @@ use crate::{
 /// ```
 #[derive(Debug)]
 pub struct Snake {
-    body: Vec<Coordinate>,
-    direction: Direction,
+    pub body: Vec<Coordinate>,
+    pub direction: Direction,
     has_eaten: bool,
 }
 
