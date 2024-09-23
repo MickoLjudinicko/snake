@@ -5,6 +5,7 @@ mod direction;
 mod food;
 mod game;
 mod input;
+mod music;
 mod snake;
 mod sound;
 
