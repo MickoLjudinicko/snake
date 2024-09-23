@@ -13,6 +13,8 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 use std::io::{stdout, Write};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 use std::{thread, time};
 
 pub struct Game {
@@ -43,6 +45,15 @@ impl Game {
         let mut stdout = stdout();
         execute!(stdout, Hide).unwrap();
 
+        // Create a stop signal for the background music thread
+        let stop_signal = Arc::new(AtomicBool::new(false));
+        let music_stop_signal = stop_signal.clone();
+
+        // Start the background music thread
+        thread::spawn(move || {
+            play_background_music(music_stop_signal);
+        });
+
         loop {
             if self.is_autopilot_on {
                 self.autopilot();
@@ -58,17 +69,23 @@ impl Game {
                 self.food = Food::new(&self.snake);
                 self.score += 1;
 
-                sound::play_tone(440, 200);
+                thread::spawn(|| {
+                    sound::play_tone(440, 200);
+                });
             }
 
             if self.snake.collides_with_self() || self.snake.collides_with_wall() {
                 sound::play_tone(220, 500);
+
                 break;
             }
 
             self.render();
             thread::sleep(time::Duration::from_millis(self.game_speed));
         }
+
+        // Signal the music thread to stop
+        stop_signal.store(true, Ordering::SeqCst);
 
         self.print_game_over_screen(stdout);
     }
@@ -195,4 +212,25 @@ fn move_cursor_to_top_left_corner(mut stdout: std::io::Stdout) {
 
 fn clear_screen(mut stdout: &std::io::Stdout) {
     execute!(stdout, Clear(ClearType::All)).unwrap();
+}
+
+fn play_background_music(stop_signal: Arc<AtomicBool>) {
+    let notes = [
+        (311.13, 250), // E♭
+        (349.23, 250), // F
+        (233.08, 250), // B♭
+        (261.63, 250), // C
+        (233.08, 250), // B♭
+        (349.23, 250), // F
+        (311.13, 250), // E♭
+    ];
+
+    while !stop_signal.load(Ordering::SeqCst) {
+        for &(frequency, duration) in &notes {
+            if stop_signal.load(Ordering::SeqCst) {
+                break;
+            }
+            sound::play_tone(frequency as u32, duration);
+        }
+    }
 }

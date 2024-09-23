@@ -28,7 +28,7 @@ fn main() {
         1 => (150, false),
         2 => (100, false),
         3 => (50, false),
-        4 => (25, true),
+        4 => (10, true),
         _ => (100, false),
     };
 
