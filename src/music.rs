@@ -97,237 +97,20 @@ pub fn play_music(elements: Vec<MusicElement>, stop_signal: Arc<AtomicBool>) {
 /// Returns a vector of music elements representing the game's theme music.
 pub fn game_theme() -> Vec<MusicElement> {
     vec![
-        // Measure 1: Ascending chromatic scale from C4 to B4
-        MusicElement::Note(Note {
-            name: NoteName::C,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::CSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::D,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::DSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::E,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::F,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::FSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::G,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::GSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::A,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::ASharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::B,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        // Rest between phrases
-        MusicElement::Rest { duration: QUARTER },
-        // Measure 2: Descending chromatic scale from B4 to C4
-        MusicElement::Note(Note {
-            name: NoteName::B,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::ASharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::A,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::GSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::G,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::FSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::F,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::E,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::DSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::D,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::CSharp,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::C,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        // Rest between phrases
-        MusicElement::Rest { duration: QUARTER },
-        // Measure 3: Arpeggio across different octaves
-        MusicElement::Note(Note {
-            name: NoteName::C,
-            octave: 3,
-            duration: QUARTER,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::E,
-            octave: 3,
-            duration: QUARTER,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::G,
-            octave: 3,
-            duration: QUARTER,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::C,
-            octave: 4,
-            duration: QUARTER,
-        }),
-        // Measure 4: Inverted arpeggio
-        MusicElement::Note(Note {
-            name: NoteName::C,
-            octave: 4,
-            duration: QUARTER,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::G,
-            octave: 3,
-            duration: QUARTER,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::E,
-            octave: 3,
-            duration: QUARTER,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::C,
-            octave: 3,
-            duration: QUARTER,
-        }),
-        // Rest between phrases
-        MusicElement::Rest { duration: HALF },
-        // Measure 5: Melody with mixed durations and rests
-        MusicElement::Note(Note {
-            name: NoteName::A,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Rest {
-            duration: SIXTEENTH,
-        },
-        MusicElement::Note(Note {
-            name: NoteName::FSharp,
-            octave: 4,
-            duration: SIXTEENTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::D,
-            octave: 4,
-            duration: QUARTER,
-        }),
-        MusicElement::Rest { duration: EIGHTH },
-        MusicElement::Note(Note {
-            name: NoteName::E,
-            octave: 4,
-            duration: EIGHTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::GSharp,
-            octave: 4,
-            duration: HALF,
-        }),
-        // Measure 6: Chord (simulated by quickly playing notes)
+        // 1st Measure
         MusicElement::Note(Note {
             name: NoteName::C,
             octave: 4,
             duration: SIXTEENTH,
         }),
-        MusicElement::Note(Note {
-            name: NoteName::E,
-            octave: 4,
-            duration: SIXTEENTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::G,
-            octave: 4,
-            duration: SIXTEENTH,
-        }),
-        MusicElement::Rest { duration: EIGHTH },
-        // Measure 7: Fast run of notes
         MusicElement::Note(Note {
             name: NoteName::C,
             octave: 5,
             duration: SIXTEENTH,
         }),
         MusicElement::Note(Note {
-            name: NoteName::B,
-            octave: 4,
-            duration: SIXTEENTH,
-        }),
-        MusicElement::Note(Note {
-            name: NoteName::ASharp,
-            octave: 4,
+            name: NoteName::A,
+            octave: 3,
             duration: SIXTEENTH,
         }),
         MusicElement::Note(Note {
@@ -336,18 +119,54 @@ pub fn game_theme() -> Vec<MusicElement> {
             duration: SIXTEENTH,
         }),
         MusicElement::Note(Note {
-            name: NoteName::GSharp,
+            name: NoteName::ASharp,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::ASharp,
+            octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Rest { duration: QUARTER },
+        MusicElement::Rest { duration: QUARTER },
+        // 2nd Measure
+        MusicElement::Note(Note {
+            name: NoteName::C,
             octave: 4,
             duration: SIXTEENTH,
         }),
         MusicElement::Note(Note {
-            name: NoteName::G,
+            name: NoteName::C,
+            octave: 5,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::A,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::A,
             octave: 4,
             duration: SIXTEENTH,
         }),
         MusicElement::Note(Note {
-            name: NoteName::FSharp,
+            name: NoteName::ASharp,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::ASharp,
             octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Rest { duration: QUARTER },
+        MusicElement::Rest { duration: QUARTER },
+        // 3rd Measure
+        MusicElement::Note(Note {
+            name: NoteName::F,
+            octave: 3,
             duration: SIXTEENTH,
         }),
         MusicElement::Note(Note {
@@ -355,7 +174,60 @@ pub fn game_theme() -> Vec<MusicElement> {
             octave: 4,
             duration: SIXTEENTH,
         }),
-        // Rest before repeating
-        MusicElement::Rest { duration: WHOLE },
+        MusicElement::Note(Note {
+            name: NoteName::D,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::D,
+            octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Rest { duration: EIGHTH },
+        MusicElement::Rest { duration: QUARTER },
+        // 4th Measure
+        MusicElement::Note(Note {
+            name: NoteName::F,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::F,
+            octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::D,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::D,
+            octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 3,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 4,
+            duration: SIXTEENTH,
+        }),
+        MusicElement::Rest { duration: EIGHTH },
+        MusicElement::Rest { duration: QUARTER },
     ]
 }

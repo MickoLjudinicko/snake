@@ -126,6 +126,7 @@ impl Game {
             Direction::Left,
             Direction::Right,
         ];
+
         let mut best_direction = self.snake.direction;
         let mut min_distance = i32::MAX;
 
