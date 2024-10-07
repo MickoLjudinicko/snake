@@ -1,4 +1,3 @@
-pub mod ai;
 pub mod constants;
 pub mod coordinate;
 pub mod direction;

@@ -1,6 +1,6 @@
-mod ai;
 mod constants;
 mod coordinate;
+mod difficulty_menu;
 mod direction;
 mod food;
 mod game;
@@ -15,6 +15,7 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use difficulty_menu::DifficultyMenu;
 use game::Game;
 use menu::{Menu, MenuItem};
 use std::{error::Error, io};
@@ -93,9 +94,27 @@ fn main() -> Result<(), Box<dyn Error>> {
 fn select_difficulty(
     terminal: &mut Terminal<CrosstermBackend<io::Stdout>>,
 ) -> Result<u8, Box<dyn Error>> {
-    // Implement difficulty selection menu
-    // Return the selected game speed
-    Ok(250) // Default to medium difficulty
+    let mut difficulty_menu = DifficultyMenu::new();
+
+    loop {
+        terminal.draw(|f| difficulty_menu.render(f))?;
+
+        if let Event::Key(key) = event::read()? {
+            match key.code {
+                KeyCode::Up => difficulty_menu.previous(),
+                KeyCode::Down => difficulty_menu.next(),
+                KeyCode::Enter => {
+                    if let Some(selected_speed) = difficulty_menu.get_selected_speed() {
+                        return Ok(selected_speed);
+                    }
+                }
+                KeyCode::Char('q') => break, // Exit if 'q' is pressed
+                _ => {}
+            }
+        }
+    }
+
+    Ok(100) // Default to medium difficulty
 }
 
 fn toggle_sound() {
