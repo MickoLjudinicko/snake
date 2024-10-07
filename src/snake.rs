@@ -63,7 +63,7 @@ use crate::{
 pub struct Snake {
     pub body: Vec<Coordinate>,
     pub direction: Direction,
-    has_eaten: bool,
+    pub has_eaten: bool,
 }
 
 impl Snake {
@@ -121,8 +121,6 @@ impl Snake {
     }
 
     pub fn grow(&mut self) {
-        // let tail = *self.body.last().unwrap();
-        // self.body.push(tail);
         self.has_eaten = true;
     }
 
@@ -141,5 +139,11 @@ impl Snake {
 
     pub fn body(&self) -> &Vec<Coordinate> {
         &self.body
+    }
+}
+
+impl Default for Snake {
+    fn default() -> Self {
+        Self::new()
     }
 }

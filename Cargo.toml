@@ -6,4 +6,8 @@ edition = "2021"
 [dependencies]
 crossterm = "*"
 rand = "*"
-rodio = "0.14"
+rodio = "*"
+
+[[bin]]
+name = "snake"
+path = "src/main.rs"

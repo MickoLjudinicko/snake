@@ -9,29 +9,12 @@ mod music;
 mod snake;
 mod sound;
 
-use std::io::{self, Write};
-
-use game::Game;
+use game::{get_difficulty_choice, print_difficulty_selection, Game};
 
 fn main() {
-    println!("Select Difficulty Level:");
-    println!("1. Easy");
-    println!("2. Medium");
-    println!("3. Hard");
-    print!("Enter your choice (1-3): ");
-    io::stdout().flush().unwrap();
+    print_difficulty_selection();
 
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    let choice = input.trim().parse::<u32>().unwrap_or(2);
-
-    let (game_speed, autopilot) = match choice {
-        1 => (150, false),
-        2 => (100, false),
-        3 => (50, false),
-        4 => (10, true),
-        _ => (100, false),
-    };
+    let (game_speed, autopilot) = get_difficulty_choice();
 
     let mut game = Game::new(game_speed, autopilot);
     game.run();

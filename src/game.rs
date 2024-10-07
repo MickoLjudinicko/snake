@@ -12,7 +12,7 @@ use crossterm::{
     style::Print,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
-use std::io::{stdout, Write};
+use std::io::{self, stdout, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::{thread, time};
@@ -22,12 +22,12 @@ pub struct Game {
     food: Food,
     input_handler: InputHandler,
     score: u32,
-    game_speed: u64,
+    game_speed: u8,
     is_autopilot_on: bool,
 }
 
 impl Game {
-    pub fn new(game_speed: u64, is_autopilot_on: bool) -> Self {
+    pub fn new(game_speed: u8, is_autopilot_on: bool) -> Self {
         let snake = Snake::new();
         let food = Food::new(&snake);
         Self {
@@ -83,7 +83,7 @@ impl Game {
             }
 
             self.render();
-            thread::sleep(time::Duration::from_millis(self.game_speed));
+            thread::sleep(time::Duration::from_millis(self.game_speed as u64));
         }
 
         // Signal the music thread to stop
@@ -215,4 +215,29 @@ fn move_cursor_to_top_left_corner(mut stdout: std::io::Stdout) {
 
 fn clear_screen(mut stdout: &std::io::Stdout) {
     execute!(stdout, Clear(ClearType::All)).unwrap();
+}
+
+pub fn print_difficulty_selection() {
+    println!("Select Difficulty Level:");
+
+    println!("1. Easy");
+    println!("2. Medium");
+    println!("3. Hard");
+
+    print!("Enter your choice (1-3): ");
+    io::stdout().flush().unwrap();
+}
+
+pub fn get_difficulty_choice() -> (u8, bool) {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    let choice = input.trim().parse::<u32>().unwrap_or(2);
+
+    match choice {
+        1 => (150, false),
+        2 => (100, false),
+        3 => (50, false),
+        4 => (10, true),
+        _ => (100, false),
+    }
 }
