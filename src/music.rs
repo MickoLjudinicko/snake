@@ -6,16 +6,12 @@ use std::time::Duration;
 
 // Standard note durations in milliseconds (assuming a tempo of 120 BPM)
 pub const WHOLE: u64 = 1000;
-pub const HALF: u64 = 500;
 pub const QUARTER: u64 = 250;
 pub const EIGHTH: u64 = 125;
 pub const SIXTEENTH: u64 = 63;
 
 // Triplet note durations
-pub const WHOLE_TRIPLET: u64 = (WHOLE as f64 * (2.0 / 3.0)) as u64;
-pub const HALF_TRIPLET: u64 = (HALF as f64 * (2.0 / 3.0)) as u64;
 pub const QUARTER_TRIPLET: u64 = (QUARTER as f64 * (2.0 / 3.0)) as u64;
-pub const EIGHTH_TRIPLET: u64 = (EIGHTH as f64 * (2.0 / 3.0)) as u64;
 pub const SIXTEENTH_TRIPLET: u64 = (SIXTEENTH as f64 * (2.0 / 3.0)) as u64;
 
 /// Represents the name of a musical note.
