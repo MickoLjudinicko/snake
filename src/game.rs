@@ -40,7 +40,7 @@ impl Game {
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> bool {
         enable_raw_mode().unwrap();
         let mut stdout = stdout();
         execute!(stdout, Hide).unwrap();
@@ -79,17 +79,17 @@ impl Game {
             if self.snake.collides_with_self() || self.snake.collides_with_wall() {
                 sound::play_tone(220, 500);
 
-                break;
+                // Signal the music thread to stop
+                stop_signal.store(true, Ordering::SeqCst);
+
+                self.print_game_over_screen(stdout);
+
+                return true;
             }
 
             self.render();
             thread::sleep(time::Duration::from_millis(self.game_speed as u64));
         }
-
-        // Signal the music thread to stop
-        stop_signal.store(true, Ordering::SeqCst);
-
-        self.print_game_over_screen(stdout);
     }
 
     fn autopilot(&mut self) {
