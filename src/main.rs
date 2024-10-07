@@ -9,6 +9,7 @@ mod menu;
 mod music;
 mod snake;
 mod sound;
+mod sound_menu;
 
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -18,6 +19,7 @@ use crossterm::{
 use difficulty_menu::DifficultyMenu;
 use game::Game;
 use menu::{Menu, MenuItem};
+use sound_menu::SoundMenu;
 use std::{error::Error, io};
 use tui::{backend::CrosstermBackend, Terminal};
 
@@ -30,6 +32,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut menu = Menu::new();
     let mut game_speed = 20;
+    let mut sound_enabled = true;
+    let mut music_enabled = true;
     let autopilot = false;
 
     loop {
@@ -43,7 +47,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                 KeyCode::Enter => {
                     match menu.get_selected() {
                         Some(MenuItem::Play) => {
-                            let mut game = Game::new(game_speed, autopilot);
+                            let mut game =
+                                Game::new(game_speed, autopilot, sound_enabled, music_enabled);
 
                             disable_raw_mode()?;
                             execute!(
@@ -71,7 +76,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         }
                         Some(MenuItem::Sound) => {
                             // Implement sound toggle logic
-                            toggle_sound();
+                            toggle_sound(&mut terminal, &mut sound_enabled, &mut music_enabled)?;
                         }
                         Some(MenuItem::Quit) => break,
                         None => {}
@@ -117,6 +122,30 @@ fn select_difficulty(
     Ok(100) // Default to medium difficulty
 }
 
-fn toggle_sound() {
-    // Implement sound toggle logic
+fn toggle_sound(
+    terminal: &mut Terminal<CrosstermBackend<io::Stdout>>,
+    sound_enabled: &mut bool,
+    music_enabled: &mut bool,
+) -> Result<(), Box<dyn Error>> {
+    let mut sound_menu = SoundMenu::new(*sound_enabled, *music_enabled);
+
+    loop {
+        terminal.draw(|f| sound_menu.render(f))?;
+
+        if let Event::Key(key) = event::read()? {
+            match key.code {
+                KeyCode::Up => sound_menu.previous(),
+                KeyCode::Down => sound_menu.next(),
+                KeyCode::Enter => {
+                    sound_menu.toggle_selection();
+                    *sound_enabled = sound_menu.sound_enabled;
+                    *music_enabled = sound_menu.music_enabled;
+                }
+                KeyCode::Char('q') => break, // Exit if 'q' is pressed
+                _ => {}
+            }
+        }
+    }
+
+    Ok(())
 }

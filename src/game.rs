@@ -12,7 +12,7 @@ use crossterm::{
     style::Print,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
-use std::io::{self, stdout, Write};
+use std::io::{stdout, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::{thread, time};
@@ -24,10 +24,17 @@ pub struct Game {
     score: u32,
     game_speed: u8,
     is_autopilot_on: bool,
+    sound_enabled: bool,
+    music_enabled: bool,
 }
 
 impl Game {
-    pub fn new(game_speed: u8, is_autopilot_on: bool) -> Self {
+    pub fn new(
+        game_speed: u8,
+        is_autopilot_on: bool,
+        sound_enabled: bool,
+        music_enabled: bool,
+    ) -> Self {
         let snake = Snake::new();
         let food = Food::new(&snake);
         Self {
@@ -37,6 +44,8 @@ impl Game {
             score: 0,
             game_speed,
             is_autopilot_on,
+            sound_enabled,
+            music_enabled,
         }
     }
 
@@ -52,9 +61,11 @@ impl Game {
         let theme_notes = music::game_theme();
 
         // Start the background music thread
-        thread::spawn(move || {
-            music::play_music(theme_notes, music_stop_signal);
-        });
+        if self.music_enabled {
+            thread::spawn(move || {
+                music::play_music(theme_notes, music_stop_signal);
+            });
+        }
 
         loop {
             if self.is_autopilot_on {
@@ -71,13 +82,17 @@ impl Game {
                 self.food = Food::new(&self.snake);
                 self.score += 1;
 
-                thread::spawn(|| {
-                    sound::play_tone(440, 200);
-                });
+                if self.sound_enabled {
+                    thread::spawn(|| {
+                        sound::play_tone(440, 200);
+                    });
+                }
             }
 
             if self.snake.collides_with_self() || self.snake.collides_with_wall() {
-                sound::play_tone(220, 500);
+                if self.sound_enabled {
+                    sound::play_tone(220, 500);
+                }
 
                 // Signal the music thread to stop
                 stop_signal.store(true, Ordering::SeqCst);
@@ -215,29 +230,4 @@ fn move_cursor_to_top_left_corner(mut stdout: std::io::Stdout) {
 
 fn clear_screen(mut stdout: &std::io::Stdout) {
     execute!(stdout, Clear(ClearType::All)).unwrap();
-}
-
-pub fn print_difficulty_selection() {
-    println!("Select Difficulty Level:");
-
-    println!("1. Easy");
-    println!("2. Medium");
-    println!("3. Hard");
-
-    print!("Enter your choice (1-3): ");
-    io::stdout().flush().unwrap();
-}
-
-pub fn get_difficulty_choice() -> (u8, bool) {
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    let choice = input.trim().parse::<u32>().unwrap_or(2);
-
-    match choice {
-        1 => (150, false),
-        2 => (100, false),
-        3 => (50, false),
-        4 => (10, true),
-        _ => (100, false),
-    }
 }
