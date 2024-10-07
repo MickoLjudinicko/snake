@@ -11,6 +11,13 @@ pub const QUARTER: u64 = 250;
 pub const EIGHTH: u64 = 125;
 pub const SIXTEENTH: u64 = 63;
 
+// Triplet note durations
+pub const WHOLE_TRIPLET: u64 = (WHOLE as f64 * (2.0 / 3.0)) as u64;
+pub const HALF_TRIPLET: u64 = (HALF as f64 * (2.0 / 3.0)) as u64;
+pub const QUARTER_TRIPLET: u64 = (QUARTER as f64 * (2.0 / 3.0)) as u64;
+pub const EIGHTH_TRIPLET: u64 = (EIGHTH as f64 * (2.0 / 3.0)) as u64;
+pub const SIXTEENTH_TRIPLET: u64 = (SIXTEENTH as f64 * (2.0 / 3.0)) as u64;
+
 /// Represents the name of a musical note.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum NoteName {
@@ -128,7 +135,7 @@ pub fn game_theme() -> Vec<MusicElement> {
             octave: 4,
             duration: SIXTEENTH,
         }),
-        MusicElement::Rest { duration: QUARTER },
+        MusicElement::Rest { duration: EIGHTH },
         MusicElement::Rest { duration: QUARTER },
         // 2nd Measure
         MusicElement::Note(Note {
@@ -161,7 +168,7 @@ pub fn game_theme() -> Vec<MusicElement> {
             octave: 4,
             duration: SIXTEENTH,
         }),
-        MusicElement::Rest { duration: QUARTER },
+        MusicElement::Rest { duration: EIGHTH },
         MusicElement::Rest { duration: QUARTER },
         // 3rd Measure
         MusicElement::Note(Note {
@@ -229,5 +236,113 @@ pub fn game_theme() -> Vec<MusicElement> {
         }),
         MusicElement::Rest { duration: EIGHTH },
         MusicElement::Rest { duration: QUARTER },
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::D,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::CSharp,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        // 5th Measure
+        MusicElement::Note(Note {
+            name: NoteName::C,
+            octave: 4,
+            duration: QUARTER,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 4,
+            duration: QUARTER,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::D,
+            octave: 4,
+            duration: QUARTER,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::GSharp,
+            octave: 3,
+            duration: QUARTER,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::G,
+            octave: 3,
+            duration: QUARTER,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::CSharp,
+            octave: 4,
+            duration: QUARTER,
+        }),
+        // 6th Measure
+        MusicElement::Note(Note {
+            name: NoteName::C,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::FSharp,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::F,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::E,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::ASharp,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::A,
+            octave: 4,
+            duration: SIXTEENTH_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::GSharp,
+            octave: 4,
+            duration: QUARTER_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::DSharp,
+            octave: 4,
+            duration: QUARTER_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::B,
+            octave: 3,
+            duration: QUARTER_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::ASharp,
+            octave: 3,
+            duration: QUARTER_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::A,
+            octave: 3,
+            duration: QUARTER_TRIPLET,
+        }),
+        MusicElement::Note(Note {
+            name: NoteName::GSharp,
+            octave: 3,
+            duration: QUARTER_TRIPLET,
+        }),
+        MusicElement::Rest { duration: WHOLE },
     ]
 }
