@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     let mut menu = Menu::new();
-    let mut game_speed = 20;
+    let mut game_speed = 100;
     let mut sound_enabled = true;
     let mut music_enabled = true;
     let autopilot = false;
