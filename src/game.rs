@@ -17,12 +17,29 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::{thread, time};
 
+#[derive(Debug, Clone, Copy)]
+pub enum GameDifficulty {
+    EASY,
+    MEDIUM,
+    HARD,
+}
+
+impl GameDifficulty {
+    fn convert_to_number(&self) -> u8 {
+        match self {
+            GameDifficulty::EASY => 150,
+            GameDifficulty::MEDIUM => 100,
+            GameDifficulty::HARD => 50,
+        }
+    }
+}
+
 pub struct Game {
     snake: Snake,
     food: Food,
     input_handler: InputHandler,
     score: u32,
-    game_speed: u8,
+    game_difficulty: GameDifficulty,
     is_autopilot_on: bool,
     sound_enabled: bool,
     music_enabled: bool,
@@ -30,7 +47,7 @@ pub struct Game {
 
 impl Game {
     pub fn new(
-        game_speed: u8,
+        game_difficulty: GameDifficulty,
         is_autopilot_on: bool,
         sound_enabled: bool,
         music_enabled: bool,
@@ -42,7 +59,7 @@ impl Game {
             food,
             input_handler: InputHandler::new(),
             score: 0,
-            game_speed,
+            game_difficulty,
             is_autopilot_on,
             sound_enabled,
             music_enabled,
@@ -103,7 +120,9 @@ impl Game {
             }
 
             self.render();
-            thread::sleep(time::Duration::from_millis(self.game_speed as u64));
+            thread::sleep(time::Duration::from_millis(
+                self.game_difficulty.convert_to_number() as u64,
+            ));
         }
     }
 
@@ -192,8 +211,8 @@ impl Game {
                     symbol = ' ';
                     background_color = Color::Blue;
                 } else if self.snake.body().contains(&Coordinate(x, y)) {
-                    symbol = 'O';
-                    background_color = Color::Green;
+                    symbol = '@';
+                    background_color = Color::Yellow;
                 } else if self.food.position == Coordinate(x, y) {
                     symbol = '*';
                     background_color = Color::Red;

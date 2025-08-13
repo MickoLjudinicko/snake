@@ -7,8 +7,10 @@ use tui::{
     Frame,
 };
 
+use crate::game::GameDifficulty;
+
 pub struct DifficultyMenu {
-    items: Vec<(&'static str, u8)>, // Difficulty name and speed
+    items: Vec<(&'static str, GameDifficulty)>, // Difficulty name and speed
     state: ListState,
 }
 
@@ -16,9 +18,9 @@ impl DifficultyMenu {
     pub fn new() -> Self {
         Self {
             items: vec![
-                ("Easy", 100),  // Easy mode with slow speed
-                ("Medium", 50), // Medium mode with normal speed
-                ("Hard", 25),   // Hard mode with fast speed
+                ("Easy", GameDifficulty::EASY),     // Easy mode with slow speed
+                ("Medium", GameDifficulty::MEDIUM), // Medium mode with normal speed
+                ("Hard", GameDifficulty::HARD),     // Hard mode with fast speed
             ],
             state: ListState::default(),
         }
@@ -87,7 +89,7 @@ impl DifficultyMenu {
         f.render_stateful_widget(menu, chunks[1], &mut self.state);
     }
 
-    pub fn get_selected_speed(&self) -> Option<u8> {
+    pub fn get_selected_speed(&self) -> Option<GameDifficulty> {
         self.state.selected().map(|i| self.items[i].1)
     }
 }

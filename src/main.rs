@@ -17,7 +17,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use difficulty_menu::DifficultyMenu;
-use game::Game;
+use game::{Game, GameDifficulty};
 use menu::{Menu, MenuItem};
 use sound_menu::SoundMenu;
 use std::{error::Error, io};
@@ -25,13 +25,15 @@ use tui::{backend::CrosstermBackend, Terminal};
 
 fn main() -> Result<(), Box<dyn Error>> {
     enable_raw_mode()?;
+
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
+
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
     let mut menu = Menu::new();
-    let mut game_speed = 100;
+    let mut game_difficulty = GameDifficulty::MEDIUM;
     let mut sound_enabled = true;
     let mut music_enabled = true;
     let autopilot = false;
@@ -48,7 +50,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     match menu.get_selected() {
                         Some(MenuItem::Play) => {
                             let mut game =
-                                Game::new(game_speed, autopilot, sound_enabled, music_enabled);
+                                Game::new(game_difficulty, autopilot, sound_enabled, music_enabled);
 
                             disable_raw_mode()?;
                             execute!(
@@ -72,7 +74,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         }
                         Some(MenuItem::Difficulty) => {
                             // Implement difficulty selection logic
-                            game_speed = select_difficulty(&mut terminal)?;
+                            game_difficulty = select_difficulty(&mut terminal)?;
                         }
                         Some(MenuItem::Sound) => {
                             // Implement sound toggle logic
@@ -88,17 +90,19 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     disable_raw_mode()?;
+
     execute!(
         terminal.backend_mut(),
         LeaveAlternateScreen,
         DisableMouseCapture
     )?;
+
     Ok(())
 }
 
 fn select_difficulty(
     terminal: &mut Terminal<CrosstermBackend<io::Stdout>>,
-) -> Result<u8, Box<dyn Error>> {
+) -> Result<GameDifficulty, Box<dyn Error>> {
     let mut difficulty_menu = DifficultyMenu::new();
 
     loop {
@@ -109,8 +113,8 @@ fn select_difficulty(
                 KeyCode::Up => difficulty_menu.previous(),
                 KeyCode::Down => difficulty_menu.next(),
                 KeyCode::Enter => {
-                    if let Some(selected_speed) = difficulty_menu.get_selected_speed() {
-                        return Ok(selected_speed);
+                    if let Some(selected_difficulty) = difficulty_menu.get_selected_speed() {
+                        return Ok(selected_difficulty);
                     }
                 }
                 KeyCode::Char('q') => break, // Exit if 'q' is pressed
@@ -119,7 +123,7 @@ fn select_difficulty(
         }
     }
 
-    Ok(100) // Default to medium difficulty
+    Ok(GameDifficulty::MEDIUM) // Default to medium difficulty
 }
 
 fn toggle_sound(
